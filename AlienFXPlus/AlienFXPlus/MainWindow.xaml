@@ -1,0 +1,19 @@
+﻿<Window x:Class="AlienFXPlus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlienFXPlus"
+        mc:Ignorable="d"
+        Title="AlienFX Plus" Height="373" Width="527" Icon="Main.ico">
+    <Grid Background="#FF1F2125">
+        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="139" Margin="118,58,0,0" Height="20" BorderBrush="#FF171717">
+
+        </ComboBox>
+        <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="23,383,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1_Copy" Content="Audio Output" HorizontalAlignment="Left" Margin="23,54,0,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="White"/>
+        <RadioButton GroupName="RadioFX" x:Name="RadioMedia" Content="AlienFX Media Plugin" HorizontalAlignment="Left" Margin="93,17,0,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" Checked="RadioMedia_Checked"/>
+        <RadioButton GroupName="RadioFX" x:Name="RadioWinTheme" Content="AlienFX Win Theme" HorizontalAlignment="Left" Margin="93,99,0,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" Checked="RadioMedia_Checked"/>
+
+    </Grid>
+</Window>
