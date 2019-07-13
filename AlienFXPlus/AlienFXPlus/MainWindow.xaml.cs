@@ -22,31 +22,35 @@ namespace AlienFXPlus
     /// </summary>
     public partial class MainWindow : Window
     {
-        public bool exit = false;
+        public int option;
+
+        public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
-
+            //------------Hide App When starts-------------//
+            this.Hide();
+            //------------START NAUDIO DEVICES-------------//
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
             var devices = enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active).ToList();
+            //------------List Devices Naudio Library-------------//
             comboBox1.ItemsSource = devices;
-
+            comboBox1.SelectedIndex = 0;
+            //------------Start AlienFX Controller-------------//
             var lightFX = new LightFXController();
             var result = lightFX.LFX_Initialize();
 
+            RadioWinTheme.IsChecked = true;
 
-
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             //dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Tick += new EventHandler((sender, e) => dispatcherTimer_Tick(sender, e, lightFX));
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            dispatcherTimer.Start();
         }
 
         private void setWinColor(LightFXController lightFX)
         {
             string colorStr = SystemParameters.WindowGlassBrush.ToString();
+            
             colorStr = colorStr.Replace("#", string.Empty);
             var a = (byte)System.Convert.ToUInt32(colorStr.Substring(0, 2), 16);
             var r = (byte)System.Convert.ToUInt32(colorStr.Substring(2, 2), 16);
@@ -54,15 +58,15 @@ namespace AlienFXPlus
             var b = (byte)System.Convert.ToUInt32(colorStr.Substring(6, 2), 16);
 
             var c1 = new LFX_ColorStruct(255, r, g, b);
+            label1.Content = "A : "+ a +" RED :" + r + " Green :" + g + " Blue :" + b + "    HEX :" + colorStr;
+            Brush SpeedColor = new SolidColorBrush(Color.FromRgb(r, g, b));
+            label1.Foreground = SpeedColor;
             useLFXLights(lightFX, c1);
         }
 
-
-
-        private void dispatcherTimer_Tick(object sender, EventArgs e, LightFXController lightFX)
+        private void fxMusicAnalyse(LightFXController lightFX)
         {
             var c1 = new LFX_ColorStruct(255, 0, 0, 0);
-
             if (comboBox1.SelectedItem != null)
             {
                 var device = (MMDevice)comboBox1.SelectedItem;
@@ -105,15 +109,87 @@ namespace AlienFXPlus
             lightFX.LFX_Update();
         }
 
+        private void dispatcherTimer_Tick(object sender, EventArgs e, LightFXController lightFX)
+        {
+            int caseSwitch = option;
+            switch (caseSwitch)
+            {
+                case 1:
+                    fxMusicAnalyse(lightFX);
+                    break;
+                case 2:
+                    setWinColor(lightFX);
+                    break;
+                default:
+                    setWinColor(lightFX);
+                    break;
+            }
+
+        }
+
         private void RadioMedia_Checked(object sender, RoutedEventArgs e)
         {
-
             if (RadioMedia.IsChecked == true)
+            {
                 label1.Content = "alienFX Media";
+                option = 1;
+                dispatcherTimer.Stop();
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+                dispatcherTimer.Start();
+            }
             if (RadioWinTheme.IsChecked == true)
             {
+                dispatcherTimer.Stop();
+                option = 2;
                 label1.Content = "alienFX Win";
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
+                dispatcherTimer.Start();
             }
+        }
+
+        private void FxWin_Click(object sender, RoutedEventArgs e)
+        {
+            RadioWinTheme.IsChecked = true;
+        }
+
+        private void FxMedia_Click(object sender, RoutedEventArgs e)
+        {
+            RadioMedia.IsChecked = true;
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void OpenAlienFX_Click(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            Application.Current.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
+        }
+
+        private bool m_isExplicitClose = false;
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (m_isExplicitClose == false)//NOT a user close request? ... then hide
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
+        }
+
+        private void OnTaskBarMenuItemExitClick(object sender, RoutedEventArgs e)
+        {
+            m_isExplicitClose = true;//Set this to unclock the Minimize on close 
+
+            this.Close();
         }
     }
 }
