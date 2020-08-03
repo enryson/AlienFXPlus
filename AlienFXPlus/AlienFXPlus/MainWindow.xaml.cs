@@ -71,19 +71,21 @@ namespace AlienFXPlus
             {
                 Random rnd = new Random();
                 var device = (MMDevice)comboBox1.SelectedItem;
-                //int varPuls = (int)(device.AudioMeterInformation.MasterPeakValue * 90);
+                var varPuls = device.AudioMeterInformation.MasterPeakValue;
 
-                int varRed = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(3, 8));
-                int varGreen = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(5, 9));
-                int varBlue = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(1, 7));
+                int varRed = (int)(varPuls * 10);
+                int varGreen = (int)(varPuls * 7);
+                int varBlue = (int)(varPuls * 3);
 
                 int intRed = varRed * rnd.Next(varRed, 100);
                 int intGreen = varGreen * rnd.Next(varGreen, 100);
-                int intBlue = varGreen * rnd.Next(varGreen, 100);
+                int intBlue = varBlue * rnd.Next(varBlue, 100);
+
                 byte red = Convert.ToByte(intRed >= 255? 255 : intRed);
                 byte green = Convert.ToByte(intGreen >= 255 ? 255 : intGreen);
                 byte blue = Convert.ToByte(intBlue >= 255 ? 255 : intBlue);
-                label1.Content = "R__" + varRed.ToString()+ "  G__"+varGreen.ToString() + "  B__" + varBlue.ToString();
+
+                //label1.Content = "R__" + intRed.ToString()+ "  G__"+ intGreen.ToString() + "  B__" + intBlue.ToString();
 
                 c1 = new LFX_ColorStruct(255, red, green, blue);
 
