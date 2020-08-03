@@ -69,10 +69,25 @@ namespace AlienFXPlus
             var c1 = new LFX_ColorStruct(255, 0, 0, 0);
             if (comboBox1.SelectedItem != null)
             {
+                Random rnd = new Random();
                 var device = (MMDevice)comboBox1.SelectedItem;
-                int varPuls = (int)(device.AudioMeterInformation.MasterPeakValue * 100);
-                //label1.Content = varPuls;                           
+                //int varPuls = (int)(device.AudioMeterInformation.MasterPeakValue * 90);
 
+                int varRed = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(3, 8));
+                int varGreen = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(5, 9));
+                int varBlue = (int)(device.AudioMeterInformation.MasterPeakValue * rnd.Next(1, 7));
+
+                int intRed = varRed * rnd.Next(varRed, 100);
+                int intGreen = varGreen * rnd.Next(varGreen, 100);
+                int intBlue = varGreen * rnd.Next(varGreen, 100);
+                byte red = Convert.ToByte(intRed >= 255? 255 : intRed);
+                byte green = Convert.ToByte(intGreen >= 255 ? 255 : intGreen);
+                byte blue = Convert.ToByte(intBlue >= 255 ? 255 : intBlue);
+                label1.Content = "R__" + varRed.ToString()+ "  G__"+varGreen.ToString() + "  B__" + varBlue.ToString();
+
+                c1 = new LFX_ColorStruct(255, red, green, blue);
+
+                /*
                 if (varPuls > 5)
                     c1 = new LFX_ColorStruct(255, 0, 0, 0);
                 if (varPuls > 10)
@@ -99,6 +114,7 @@ namespace AlienFXPlus
                     c1 = new LFX_ColorStruct(255, 255, 0, 255);
                 if (varPuls > 60)
                     c1 = new LFX_ColorStruct(255, 40, 255, 0);
+                */
                 useLFXLights(lightFX, c1);
             }
         }
